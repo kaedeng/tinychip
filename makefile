@@ -6,43 +6,43 @@ TARGET = Chip8
 SRC_FILES = $(wildcard ./src/*.cpp)
 
 CXX = g++
-CXXFLAGS = -O2 -L ./libs/ -I ./include/
+CXXFLAGS = -O2 -L ./lib/ -I ./include -I ./
 CXXFLAGS_DEBUG = -g
 CXXFLAGS_ERRORS = -Werror -Wall -Wextra -Wconversion -Wdouble-promotion -Wunreachable-code -Wshadow -Wpedantic -pedantic-errors
 CPPVERSION = -std=c++17
-LIBS= -lSDL2main -lSDL2 -D_REENTRANT -lSDL2_image
+LIBS= -lmingw32 -lSDL2main -lSDL2 -D_REENTRANT -lSDL2_image
 
 BUILD = build
 OBJECTS = $(subst ./src/, ./$(BUILD)/, $(SRC_FILES:.cpp=.o))
 
 ifeq ($(shell echo "Windows"), "Windows")
-	TARGET := $(TARGET).exe
-	DEL = del
+	TARGET := $(TARGET).exe 
+	DEL = del /F $(subst /,\,$(OBJECTS))
 	Q = 
 else
-	DEL = rm -r
+	DEL = rm -rf $(OBJECTS)
 	Q = "
 endif
 
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(LIBS) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(LIBS) -o $@ $^
 
-./$(BUILD)/%.o: ./src/%.cpp build
+./$(BUILD)/%.o: ./src/%.cpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) $(CPPVERSION) $(CXXFLAGS_DEBUG) $(CXXFLAGS_ERRORS) $(LIBS) -o $@ -c $<
 
 clean:
-	$(DEL) -f $(TARGET) $(BUILD) $(OBJECTS) Makefile.bak
-
-build:
-	mkdir $(BUILD)
+		$(DEL) $(TARGET)  Makefile.bak
+$(BUILD):
+	if not exist $@ mkdir $@
 
 depend:
 	@sed -i.bak '/^# DEPENDENCIES/,$$d' Makefile
 	@$(DEL) sed*
 	@echo $(Q)# DEPENDENCIES$(Q) >> Makefile
 	@$(CXX) -MM $(SRC_FILES) >> Makefile
+
 
 .PHONY: all clean depend build
 
