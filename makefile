@@ -10,7 +10,7 @@ CXXFLAGS = -O2 -L ./lib/ -I ./include -I ./
 CXXFLAGS_DEBUG = -g
 CXXFLAGS_ERRORS = -Werror -Wall -Wextra -Wconversion -Wdouble-promotion -Wunreachable-code -Wshadow -Wpedantic -pedantic-errors
 CPPVERSION = -std=c++17
-LIBS= -lmingw32 -lSDL2main -lSDL2 -D_REENTRANT -lSDL2_image
+LIBS= -lSDL2main -lSDL2 -D_REENTRANT -lSDL2_image
 
 BUILD = build
 OBJECTS = $(subst ./src/, ./$(BUILD)/, $(SRC_FILES:.cpp=.o))
@@ -19,9 +19,13 @@ ifeq ($(shell echo "Windows"), "Windows")
 	TARGET := $(TARGET).exe 
 	DEL = del /F $(subst /,\,$(OBJECTS))
 	Q = 
+	X = "if not exist $@"
+	Y = 
 else
 	DEL = rm -rf $(OBJECTS)
 	Q = "
+	X = 
+	Y = "-p"
 endif
 
 all: $(TARGET)
@@ -33,9 +37,10 @@ $(TARGET): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(CPPVERSION) $(CXXFLAGS_DEBUG) $(CXXFLAGS_ERRORS) $(LIBS) -o $@ -c $<
 
 clean:
-		$(DEL) $(TARGET)  Makefile.bak
+	$(DEL) $(TARGET)  Makefile.bak
+
 $(BUILD):
-	if not exist $@ mkdir $@
+	$(X) mkdir $(Y) $@
 
 depend:
 	@sed -i.bak '/^# DEPENDENCIES/,$$d' Makefile
