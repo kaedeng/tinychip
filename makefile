@@ -6,7 +6,7 @@ TARGET = Chip8
 SRC_FILES = $(wildcard ./src/*.cpp)
 
 CXX = g++
-CXXFLAGS = -O2 -I./include -L./lib 
+CXXFLAGS = -O2 -I./include $(A) 
 CXXFLAGS_DEBUG = -g
 CXXFLAGS_ERRORS = -Werror -Wall -Wextra -Wconversion -Wdouble-promotion -Wunreachable-code -Wshadow -Wpedantic -pedantic-errors
 CPPVERSION = -std=c++17
@@ -19,15 +19,17 @@ ifeq ($(shell echo "Windows"), "Windows")
 	TARGET := $(TARGET).exe 
 	DEL = del /F $(subst /,\,$(OBJECTS))
 	Q = 
-	X = "if not exist $@"
+	X = if not exist $@
 	Y = 
 	Z = -lmingw32 -lSDL2main
+	A = -L./libWin
 else
 	DEL = rm -rf $(OBJECTS)
 	Q = "
 	X = 
 	Y = -p
 	Z = 
+	A = -L./libLin
 endif
 
 all: $(TARGET)

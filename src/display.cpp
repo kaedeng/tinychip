@@ -11,7 +11,7 @@ display::display(){
 /**
  * user set display size init for Display type
 */
-display::display(u_int16_t w, u_int16_t h){
+display::display(uint16_t w, uint16_t h){
     width = w;
     height = h;
 }

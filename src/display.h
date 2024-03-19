@@ -5,7 +5,7 @@
 class display{
     public:
         display();
-        display(u_int16_t w, u_int16_t h);
+        display(uint16_t w, uint16_t h);
         bool initSDL() const;
         bool createWindow();
         bool createRenderer();
@@ -15,7 +15,7 @@ class display{
         SDL_Window* window;
         SDL_Renderer* renderer;
         SDL_Texture* texture;
-        u_int16_t width;
-        u_int16_t height;
+        uint16_t width;
+        uint16_t height;
 };
 #endif
