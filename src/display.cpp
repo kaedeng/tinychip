@@ -69,10 +69,10 @@ bool display::createRenderer(){
  * through bit shifting by 24 and casting to uint8_t
 */
 void display::displayClear(){
-    u_int8_t r = (uint8_t)(_backcolor >> 24);
-    u_int8_t g = (uint8_t)(_backcolor >> 16);
-    u_int8_t b = (uint8_t)(_backcolor >> 8);
-    u_int8_t a = (uint8_t)(_backcolor >> 0);
+    uint8_t r = (uint8_t)(_backcolor >> 24);
+    uint8_t g = (uint8_t)(_backcolor >> 16);
+    uint8_t b = (uint8_t)(_backcolor >> 8);
+    uint8_t a = (uint8_t)(_backcolor >> 0);
     SDL_SetRenderDrawColor(_renderer, r, g, b, a);
     // SDL_Log("%d %d %d %d", r, g, b, a);
     SDL_RenderClear(_renderer); // for some reason "clears" the display with the current set render draw color...
