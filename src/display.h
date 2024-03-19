@@ -5,17 +5,22 @@
 class display{
     public:
         display();
-        display(uint16_t w, uint16_t h);
+        display(uint32_t w, uint32_t h, uint32_t s);
         bool initSDL() const;
         bool createWindow();
         bool createRenderer();
+        void displayClear();
+        void displayUpdate();
         void displayDraw();
         void cleanSDL();
     private:
-        SDL_Window* window;
-        SDL_Renderer* renderer;
-        SDL_Texture* texture;
-        uint16_t width;
-        uint16_t height;
+        SDL_Window* _window;
+        SDL_Renderer* _renderer;
+        SDL_Texture* _texture;
+        uint32_t _width;
+        uint32_t _height;
+        uint32_t _scale;
+        uint32_t _forecolor;
+        uint32_t _backcolor;
 };
 #endif
