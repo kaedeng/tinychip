@@ -4,7 +4,9 @@
 
 class display{
     public:
-        bool initSDL();
+        display();
+        display(u_int16_t w, u_int16_t h);
+        bool initSDL() const;
         bool createWindow();
         bool createRenderer();
         void displayDraw();
@@ -13,5 +15,7 @@ class display{
         SDL_Window* window;
         SDL_Renderer* renderer;
         SDL_Texture* texture;
+        u_int16_t width;
+        u_int16_t height;
 };
 #endif

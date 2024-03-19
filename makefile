@@ -6,40 +6,40 @@ TARGET = Chip8
 SRC_FILES = $(wildcard ./src/*.cpp)
 
 CXX = g++
-CXXFLAGS = -O2 -L ./lib/ -I ./include -I ./
+CXXFLAGS = -O2 -I./include -L./lib 
 CXXFLAGS_DEBUG = -g
 CXXFLAGS_ERRORS = -Werror -Wall -Wextra -Wconversion -Wdouble-promotion -Wunreachable-code -Wshadow -Wpedantic -pedantic-errors
 CPPVERSION = -std=c++17
-LIBS = $(Z) -lSDL2main -lSDL2 -D_REENTRANT -lSDL2_image
+LIBS= $(Z) -lSDL2 -D_REENTRANT -lSDL2_image
 
-BUILD =build
+BUILD = build
 OBJECTS = $(subst ./src/, ./$(BUILD)/, $(SRC_FILES:.cpp=.o))
 
 ifeq ($(shell echo "Windows"), "Windows")
 	TARGET := $(TARGET).exe 
 	DEL = del /F $(subst /,\,$(OBJECTS))
 	Q = 
-	X = if not exist $@
+	X = "if not exist $@"
 	Y = 
-	Z = "-lmingw32"
+	Z = -lmingw32 -lSDL2main
 else
 	DEL = rm -rf $(OBJECTS)
 	Q = "
 	X = 
-	Y = "-p"
+	Y = -p
 	Z = 
 endif
 
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(LIBS) -o $@ $^
+	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
 ./$(BUILD)/%.o: ./src/%.cpp | $(BUILD)
-	$(CXX) $(CXXFLAGS) $(CPPVERSION) $(CXXFLAGS_DEBUG) $(CXXFLAGS_ERRORS) $(LIBS) -o $@ -c $<
+	$(CXX) -c $< -o $@ $(CXXFLAGS) $(CPPVERSION) $(CXXFLAGS_DEBUG) $(CXXFLAGS_ERRORS) $(LIBS)
 
 clean:
-	$(DEL) $(TARGET) Makefile.bak
+	$(DEL) $(TARGET)  Makefile.bak
 
 $(BUILD):
 	$(X) mkdir $(Y) $@
