@@ -13,10 +13,12 @@ int main(int argc, char** argv){
 
 
     //temp loop
-    while(true){
+    int state = 1; // 0 for quit, 1 for running, 2 for paused.
+    while(state != 0){
         SDL_Delay(16); // approx 60 hz delay
         display.displayClear();
         display.displayUpdate();
+        display.handleInput(state);
     }
     display.cleanSDL();
     exit(EXIT_SUCCESS);

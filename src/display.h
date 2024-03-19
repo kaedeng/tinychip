@@ -12,6 +12,7 @@ class display{
         void displayClear();
         void displayUpdate();
         void displayDraw();
+        void handleInput(int& state);
         void cleanSDL();
     private:
         SDL_Window* _window;

@@ -8,7 +8,7 @@ display::display(){
     _height = 32*20;
     _scale = 20;
     _forecolor = 0xFFFFFFFF;
-    _backcolor = 0xFFFF00FF;
+    _backcolor = 0x00000000;
 }
 
 /**
@@ -23,7 +23,8 @@ display::display(uint32_t w, uint32_t h, uint32_t s){
 }
 
 /**
- * Init SDL, return true if success, return false if fail
+ * Init SDL
+ * @return bool passed to main function to see if SDL init properly.
 */
 bool display::initSDL() const{
     if(SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0){
@@ -37,6 +38,7 @@ bool display::initSDL() const{
 
 /**
  * Init SDL Window subsystem
+ * @return bool passed to main function to see if display init properly.
 */
 bool display::createWindow(){
     _window = SDL_CreateWindow("Chip-8 Emulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height, 0);
@@ -51,6 +53,7 @@ bool display::createWindow(){
 
 /**
  * Init SDL Renderer subsystem
+ * @return bool passed to main function to see if renderer init properly.
 */
 bool display::createRenderer(){
     _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
@@ -90,7 +93,35 @@ void display::displayDraw(){
 }
 
 /**
- * Clean system and free mem usage.
+ * Handles input for the SDL window.
+ * @param state of the loop, will break out of loop on certain cases
+*/
+void display::handleInput(int& state){
+    SDL_Event event;
+    while(SDL_PollEvent(&event)){
+        switch(event.type){
+            case SDL_QUIT:
+                state = 0;
+                return;
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym){
+                case SDLK_ESCAPE:
+                    state = 0;
+                    return;
+                default:
+                    break;
+                }
+            case SDL_KEYUP:
+                break;
+            default:
+                state = 1;
+                return;
+        }   
+    }
+}
+
+/**
+ * Clean system and free memory usage.
 */
 void display::cleanSDL(){
     SDL_DestroyWindow(_window);
