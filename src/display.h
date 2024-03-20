@@ -5,12 +5,12 @@
 class display{
     public:
         display();
-        display(uint32_t w, uint32_t h, uint32_t s);
+        display(uint32_t w, uint32_t h, uint32_t s, uint32_t fc, uint32_t bc);
         bool initSDL() const;
         bool createWindow();
         bool createRenderer();
         void displayClear();
-        void displayUpdate();
+        void displayUpdate() const;
         void displayDraw();
         void handleInput(int& state);
         void cleanSDL();

@@ -8,18 +8,18 @@ display::display(){
     _height = 32*20;
     _scale = 20;
     _forecolor = 0xFFFFFFFF;
-    _backcolor = 0x00000000;
+    _backcolor = 0xFFD1DCFF;
 }
 
 /**
  * user set display size init for Display type
 */
-display::display(uint32_t w, uint32_t h, uint32_t s){
+display::display(uint32_t w, uint32_t h, uint32_t s, uint32_t fc, uint32_t bc){
     _scale = s;
     _width = w*_scale;
     _height = h*_scale;
-    _forecolor = 0xFFFFFFFF;
-    _backcolor = 0xFFFF00FF;
+    _forecolor = fc;
+    _backcolor = bc;
 }
 
 /**
@@ -81,7 +81,7 @@ void display::displayClear(){
     SDL_RenderClear(_renderer); // for some reason "clears" the display with the current set render draw color...
 }
 
-void display::displayUpdate(){
+void display::displayUpdate() const{
     SDL_RenderPresent(_renderer);
 }
 
@@ -125,6 +125,8 @@ void display::handleInput(int& state){
 */
 void display::cleanSDL(){
     SDL_DestroyWindow(_window);
-    SDL_DestroyRenderer(_renderer);    
+    SDL_DestroyRenderer(_renderer);
+    _renderer = NULL;
+    _window = NULL;
     SDL_Quit();
 }
