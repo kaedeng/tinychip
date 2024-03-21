@@ -1,14 +1,14 @@
 #include "display.h"
 
 /**
- * default init for W/H, set to 64/32
+ * default init for W/H, set to 64/32, scale to 20, forecolor to white, backcolor to black
 */
 display::display(){
     _width = 64*20;
     _height = 32*20;
     _scale = 20;
-    _forecolor = 0xFFFFFFFF;
-    _backcolor = 0xFFD1DCFF;
+    _forecolor = 0xFFFFFFFF; // 8 bit hex color for white ... 0xRRGGBBAA
+    _backcolor = 0x00000000; // 8 bit hex color for black
 }
 
 /**
@@ -69,7 +69,7 @@ bool display::createRenderer(){
 /**
  * Clear the display, set to background color.
  * Bit shift to get only the specific bits for respective colors, 0xFF000000 -> 0xFF 
- * through bit shifting by 24 and casting to uint8_t
+ * through bit shifting by 24 and casting to uint8_t to get the lowest value of the 32 bit int.
 */
 void display::displayClear(){
     uint8_t r = (uint8_t)(_backcolor >> 24);
@@ -77,7 +77,6 @@ void display::displayClear(){
     uint8_t b = (uint8_t)(_backcolor >> 8);
     uint8_t a = (uint8_t)(_backcolor >> 0);
     SDL_SetRenderDrawColor(_renderer, r, g, b, a);
-    // SDL_Log("%d %d %d %d", r, g, b, a);
     SDL_RenderClear(_renderer); // for some reason "clears" the display with the current set render draw color...
 }
 
@@ -103,16 +102,20 @@ void display::handleInput(int& state){
             case SDL_QUIT:
                 state = 0;
                 return;
+
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym){
-                case SDLK_ESCAPE:
-                    state = 0;
-                    return;
-                default:
-                    break;
+                    case SDLK_ESCAPE:
+                        state = 0;
+                        return;
+
+                    default:
+                        break;
                 }
+
             case SDL_KEYUP:
                 break;
+
             default:
                 state = 1;
                 return;
