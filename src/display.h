@@ -1,6 +1,9 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 #include <SDL2/SDL.h>
+#include "cpu.h"
+
+class cpu; // forward declaration because idk why but cpu.h is not working? 
 
 class display{
     public:
@@ -11,9 +14,10 @@ class display{
         bool createRenderer();
         void displayClear();
         void displayUpdate() const;
-        void displayDraw();
+        void displayDraw(cpu*);
         void handleInput(int& state);
         void cleanSDL();
+        bool draw;
     private:
         SDL_Window* _window;
         SDL_Renderer* _renderer;
