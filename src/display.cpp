@@ -1,5 +1,5 @@
 #include "display.h"
-
+#include <iostream>
 /**
  * default init for W/H, set to 64/32, scale to 20, forecolor to white, backcolor to black
 */
@@ -77,20 +77,48 @@ void display::displayClear(){
     uint8_t b = (uint8_t)(_backcolor >> 8);
     uint8_t a = (uint8_t)(_backcolor >> 0);
     SDL_SetRenderDrawColor(_renderer, r, g, b, a);
-    SDL_RenderClear(_renderer); // for some reason "clears" the display with the current set render draw color...
-}
-
-void display::displayUpdate() const{
-    SDL_RenderPresent(_renderer);
+    SDL_RenderClear(_renderer);
 }
 
 /**
+ * Function call to render into renderer/window
+ * 
+ */
+void display::displayUpdate() const{
+    SDL_RenderPresent(_renderer);
+}
+/**
  * Draw onto SDL display using renderer/window
 */
-void display::displayDraw(){
-    
-}
+void display::displayDraw(cpu* cpu){
+    SDL_Rect rect = {64, 32, (int)_scale, (int)_scale};
+    const uint8_t bgR = (uint8_t)((_backcolor >> 24) & 0xFF);
+    const uint8_t bgG = (uint8_t)((_backcolor >> 16) & 0xFF);
+    const uint8_t bgB = (uint8_t)((_backcolor >>  8) & 0xFF);
+    const uint8_t bgA = (uint8_t)((_backcolor >>  0) & 0xFF);
 
+    const uint8_t fgR = (uint8_t)((_forecolor >> 24) & 0xFF);
+    const uint8_t fgG = (uint8_t)((_forecolor >> 16) & 0xFF);
+    const uint8_t fgB = (uint8_t)((_forecolor >>  8) & 0xFF);
+    const uint8_t fgA = (uint8_t)((_forecolor >>  0) & 0xFF);
+
+    for (uint32_t i = 0; i < sizeof(cpu->_display); i++) {
+        // X = i % window width
+        // Y = i / window width
+        rect.x = (i % 64) * _scale;
+        rect.y = (i / 64) * _scale;
+        if(cpu->_display[i]){
+            SDL_SetRenderDrawColor(_renderer, fgR, fgG, fgB, fgA);
+            SDL_RenderFillRect(_renderer, &rect);
+        }
+        else{
+            SDL_SetRenderDrawColor(_renderer, bgR, bgG, bgB, bgA);
+            SDL_RenderFillRect(_renderer, &rect);            
+        }   
+    }
+    SDL_RenderPresent(_renderer);
+    //displayUpdate();
+}
 /**
  * Handles input for the SDL window.
  * @param state of the loop, will break out of loop on certain cases
@@ -105,20 +133,21 @@ void display::handleInput(int& state){
 
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym){
-                    case SDLK_ESCAPE:
+                    case SDLK_ESCAPE: // Escape
                         state = 0;
                         return;
-
+                    case SDLK_SPACE: // Space Bar
+                        if(state == 1){state = 2; SDL_Log("--Paused--");}
+                        else {state = 1; SDL_Log("--Unpaused--");}
+                        return;
                     default:
                         break;
                 }
-
+                break;
             case SDL_KEYUP:
                 break;
-
             default:
-                state = 1;
-                return;
+                break;
         }   
     }
 }
