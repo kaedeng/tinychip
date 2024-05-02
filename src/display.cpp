@@ -91,7 +91,7 @@ void display::displayUpdate() const{
  * Draw onto SDL display using renderer/window
 */
 void display::displayDraw(cpu* cpu){
-    SDL_Rect rect = {64, 32, (int)_scale, (int)_scale};
+    SDL_Rect rect = {0, 0, (int)_scale, (int)_scale};
     const uint8_t bgR = (uint8_t)((_backcolor >> 24) & 0xFF);
     const uint8_t bgG = (uint8_t)((_backcolor >> 16) & 0xFF);
     const uint8_t bgB = (uint8_t)((_backcolor >>  8) & 0xFF);
@@ -123,7 +123,7 @@ void display::displayDraw(cpu* cpu){
  * Handles input for the SDL window.
  * @param state of the loop, will break out of loop on certain cases
 */
-void display::handleInput(int& state){
+void display::handleInput(int& state, cpu* cpu){
     SDL_Event event;
     while(SDL_PollEvent(&event)){
         switch(event.type){
@@ -140,12 +140,60 @@ void display::handleInput(int& state){
                         if(state == 1){state = 2; SDL_Log("--Paused--");}
                         else {state = 1; SDL_Log("--Unpaused--");}
                         return;
+                    case SDLK_EQUALS:
+                        // '=': Reset CHIP8 machine for the current ROM
+                        cpu->initCpu(cpu->getName(), state);
+                        break;
+                    case SDLK_1: cpu->keymap[0x1] = true; break;
+                    case SDLK_2: cpu->keymap[0x2] = true; break;
+                    case SDLK_3: cpu->keymap[0x3] = true; break;
+                    case SDLK_4: cpu->keymap[0xC] = true; break;
+
+                    case SDLK_q: cpu->keymap[0x4] = true; break;
+                    case SDLK_w: cpu->keymap[0x5] = true; break;
+                    case SDLK_e: cpu->keymap[0x6] = true; break;
+                    case SDLK_r: cpu->keymap[0xD] = true; break;
+
+                    case SDLK_a: cpu->keymap[0x7] = true; break;
+                    case SDLK_s: cpu->keymap[0x8] = true; break;
+                    case SDLK_d: cpu->keymap[0x9] = true; break;
+                    case SDLK_f: cpu->keymap[0xE] = true; break;
+
+                    case SDLK_z: cpu->keymap[0xA] = true; break;
+                    case SDLK_x: cpu->keymap[0x0] = true; break;
+                    case SDLK_c: cpu->keymap[0xB] = true; break;
+                    case SDLK_v: cpu->keymap[0xF] = true; break;
+
                     default:
                         break;
                 }
                 break;
             case SDL_KEYUP:
-                break;
+                switch (event.key.keysym.sym) {
+                    // Map qwerty keys to CHIP8 keypad
+                    case SDLK_1: cpu->keymap[0x1] = false; break;
+                    case SDLK_2: cpu->keymap[0x2] = false; break;
+                    case SDLK_3: cpu->keymap[0x3] = false; break;
+                    case SDLK_4: cpu->keymap[0xC] = false; break;
+
+                    case SDLK_q: cpu->keymap[0x4] = false; break;
+                    case SDLK_w: cpu->keymap[0x5] = false; break;
+                    case SDLK_e: cpu->keymap[0x6] = false; break;
+                    case SDLK_r: cpu->keymap[0xD] = false; break;
+
+                    case SDLK_a: cpu->keymap[0x7] = false; break;
+                    case SDLK_s: cpu->keymap[0x8] = false; break;
+                    case SDLK_d: cpu->keymap[0x9] = false; break;
+                    case SDLK_f: cpu->keymap[0xE] = false; break;
+
+                    case SDLK_z: cpu->keymap[0xA] = false; break;
+                    case SDLK_x: cpu->keymap[0x0] = false; break;
+                    case SDLK_c: cpu->keymap[0xB] = false; break;
+                    case SDLK_v: cpu->keymap[0xF] = false; break;
+
+                    default: break;
+                }
+                
             default:
                 break;
         }   

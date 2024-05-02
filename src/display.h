@@ -15,7 +15,7 @@ class display{
         void displayClear();
         void displayUpdate() const;
         void displayDraw(cpu*);
-        void handleInput(int& state);
+        void handleInput(int& state, cpu*);
         void cleanSDL();
         bool draw;
     private:

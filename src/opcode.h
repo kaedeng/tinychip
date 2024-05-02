@@ -3,8 +3,7 @@
 
 #include <cstdint>
 
-typedef struct {
-    private:
+class opcode {
     public:
     uint16_t code; 
     uint16_t NNN; // 12 bit address
@@ -12,6 +11,6 @@ typedef struct {
     uint8_t N; // 4 bit const
     uint8_t X; // 4 bit register identifier
     uint8_t Y; // 4 bit register identifier
-}opcode;
+};
 
 #endif

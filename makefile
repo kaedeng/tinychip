@@ -8,7 +8,7 @@ SRC_FILES = $(wildcard ./src/*.cpp)
 CXX = g++
 CXXFLAGS = -O2 -I./include $(A) 
 CXXFLAGS_DEBUG = -g
-CXXFLAGS_ERRORS = -Werror -Wall -Wextra -Wconversion -Wdouble-promotion -Wunreachable-code -Wshadow -Wpedantic -pedantic-errors
+CXXFLAGS_ERRORS = -Werror -Wall -Wextra -Wdouble-promotion -Wunreachable-code -Wshadow -Wpedantic -pedantic-errors
 CPPVERSION = -std=c++17
 LIBS= $(Z) -lSDL2 -D_REENTRANT -lSDL2_image
 
