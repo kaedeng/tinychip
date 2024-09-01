@@ -1,6 +1,6 @@
 ALL OWNERSHIPS OF THE ROM FILES GO TO https://github.com/cj1128
 To use
-    - Make in console from CS200_FINAL folder
+    - Make in console from tinychip folder
     - <executable> <game name arg>
         - .\Chip8.exe <game>
         - ./Chip8 <game>
